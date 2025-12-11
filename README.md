@@ -2,13 +2,15 @@
 > [!NOTE]
 > None of the code in this repo was AI Generated, everything is hand written. (necessary to mention)
 
+*Using port 5354 beacuse MacOS uses 5353*
+
 This is a custom DNS ([RFC 1035](https://datatracker.ietf.org/doc/html/rfc1035)) server written by me. At its **current** state, Denis is not being used as a replacement for my local DNS Server, but hopefully will be in the future. This project was just made out of interest of learning Go.
 
 ## Testing
 Simply use the `dig` command as you would with any other DNS. *At it's current state, nothing happens*
 
 ```bash
-dig @127.0.0.1 -p 5353 google.com
+dig @127.0.0.1 -p 5354 google.com
 ```
 
 ## Action Plan
@@ -17,7 +19,7 @@ dig @127.0.0.1 -p 5353 google.com
 Self explanatory.
 
 ### Phase 1: Listen and receive
-Listen on UDP port 5353 (or 53) and prints out the raw bytes from incoming packets. Test with `dig`
+Listen on UDP port 5354 (or 53) and prints out the raw bytes from incoming packets. Test with `dig`
 
 
 ### Phase 2: Parse the header

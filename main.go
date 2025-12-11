@@ -1,10 +1,10 @@
 package main
 
-import "fmt"
-
-// For testing
-const DEV_PORT = 5353
-const PROD_PORT = 53
+import (
+	"fmt"
+	"log"
+	"net"
+)
 
 func cliWelcome() {
 	fmt.Println("Welcome to the DENIS DNS server!")
@@ -14,16 +14,31 @@ type ServerConfig struct {
 	Port int
 }
 
-func (c ServerConfig) PrintConfig() {
-	fmt.Printf("Port: %v\n", c.Port)
-}
-
 func main() {
 	cliWelcome()
 
-	config := ServerConfig{
-		Port: 53,
+	udpAddress, err := net.ResolveUDPAddr("udp", "127.0.0.1:5354")
+	if err != nil {
+		log.Fatalln(err)
 	}
 
-	config.PrintConfig()
+	connection, err := net.ListenUDP("udp", udpAddress)
+	if err != nil {
+		log.Fatalln(err)
+	}
+	defer connection.Close()
+
+	// UDP messages 512 octets (bytes) or less
+	buffer := make([]byte, 512)
+
+	for {
+		input, clientAddr, err := connection.ReadFromUDP(buffer)
+		if err != nil {
+			log.Printf("Error reading from packet %v\n", err)
+			continue
+		}
+
+		data := buffer[:input]
+		log.Printf("FROM \"%v\" (%d bytes)\n%x", clientAddr.String(), input, data)
+	}
 }
