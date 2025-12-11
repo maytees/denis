@@ -13,7 +13,7 @@ dig @127.0.0.1 -p 5353 google.com
 
 ## Action Plan
 
-## Phase 0: Set up project
+### Phase 0: Set up project *(CURRENT)*
 Self explanatory.
 
 ### Phase 1: Listen and receive
