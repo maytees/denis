@@ -1,9 +1,11 @@
 package main
 
 import (
+	"encoding/binary"
 	"fmt"
 	"log"
 	"net"
+	"strings"
 )
 
 func cliWelcome() {
@@ -12,6 +14,26 @@ func cliWelcome() {
 
 type ServerConfig struct {
 	Port int
+}
+
+type Header struct {
+	ID      uint16
+	FLAGS   uint16
+	QDCount uint16
+	ANCount uint16
+	NSCount uint16
+	ARCount uint16
+}
+
+func ParseHeader(header []byte) Header {
+	return Header{
+		ID:      binary.BigEndian.Uint16(header[0:2]),
+		FLAGS:   binary.BigEndian.Uint16(header[2:4]),
+		QDCount: binary.BigEndian.Uint16(header[4:6]),
+		ANCount: binary.BigEndian.Uint16(header[6:8]),
+		NSCount: binary.BigEndian.Uint16(header[8:10]),
+		ARCount: binary.BigEndian.Uint16(header[10:12]),
+	}
 }
 
 func main() {
@@ -38,7 +60,38 @@ func main() {
 			continue
 		}
 
-		data := buffer[:input]
-		log.Printf("FROM \"%v\" (%d bytes)\n%x", clientAddr.String(), input, data)
+		message := buffer[:input]
+		log.Printf("\n\nFROM \"%v\" (%d bytes)\n%x", clientAddr.String(), input, message)
+
+		offset := 12 // 12 Bytes?
+		rawHeader := message[:offset]
+
+		header := ParseHeader(rawHeader)
+		fmt.Printf("\nHeader: \n\tID: %v\n\tFlags: %v\n\tQDCOUNT (Question): %v\n\tANCOUNT (Answer): %v\n\tNSCOUNT (Authority): %v\n\tARCOUNT (Additional): %v\n\t\n",
+			header.ID,
+			header.FLAGS,
+			header.QDCount,
+			header.ANCount,
+			header.NSCount,
+			header.ARCount)
+
+		fmt.Printf("\n\nRest: %x\n", message[offset:])
+
+		qNameMap := []string{}
+
+		for {
+			length := message[offset]
+			offset += 1
+			qNameMap = append(qNameMap, string(message[offset:(offset+int(length))]))
+			offset += int(length)
+
+			if message[offset] == 0 {
+				offset += 1 // moves off the 0
+				break
+			}
+		}
+
+		resolvedDomain := strings.Join(qNameMap, ".")
+		fmt.Println(resolvedDomain)
 	}
 }
