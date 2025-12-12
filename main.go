@@ -75,8 +75,6 @@ func main() {
 			header.NSCount,
 			header.ARCount)
 
-		fmt.Printf("\n\nRest: %x\n", message[offset:])
-
 		qNameMap := []string{}
 
 		for {
@@ -92,6 +90,16 @@ func main() {
 		}
 
 		resolvedDomain := strings.Join(qNameMap, ".")
-		fmt.Println(resolvedDomain)
+		fmt.Println("Resolved Domain:", resolvedDomain)
+
+		qType := message[offset : offset+2]
+		offset += 2
+
+		qClass := message[offset : offset+2]
+		offset += 2
+
+		fmt.Printf("QType: %x\nQClass: %x\n", qType, qClass)
+
+		fmt.Printf("\n\n\nRest: %x", message[offset:])
 	}
 }
