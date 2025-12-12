@@ -15,7 +15,7 @@ dig @127.0.0.1 -p 5354 google.com
 
 ## Action Plan
 
-### Phase 0: Set up project *(CURRENT)*
+### Phase 0: Set up project
 Self explanatory.
 
 ### Phase 1: Listen and receive
@@ -26,7 +26,7 @@ Listen on UDP port 5354 (or 53) and prints out the raw bytes from incoming packe
 DNS header is the first 12 bytes of every packet. Parse the content, see [Header Section Format](https://datatracker.ietf.org/doc/html/rfc1035#section-4.1.15). Just print for now.
 
 
-### Phase 3: Parse the question
+### Phase 3: Parse the question *(CURRENT)*
 After the header comes the question section. Parse out the QNAME (has length prefix), QTYPE (record type), and QCLASS (just `in` (one) for now). All done with bytes
 
 
