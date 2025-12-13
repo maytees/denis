@@ -92,14 +92,24 @@ func main() {
 		resolvedDomain := strings.Join(qNameMap, ".")
 		fmt.Println("Resolved Domain:", resolvedDomain)
 
-		qType := message[offset : offset+2]
+		qType := binary.BigEndian.Uint16(message[offset : offset+2])
 		offset += 2
 
-		qClass := message[offset : offset+2]
+		qClass := binary.BigEndian.Uint16(message[offset : offset+2])
 		offset += 2
 
 		fmt.Printf("QType: %x\nQClass: %x\n", qType, qClass)
 
-		fmt.Printf("\n\n\nRest: %x", message[offset:])
+		fmt.Printf("Sending response back...\n")
+
+		// responseData := make([]byte, 512)
+		// x, err := connection.WriteToUDP(responseData, udpAddress)
+		// if err != nil {
+		// 	log.Print("Error occured when sending response:", err)
+		// }
+
+		fmt.Printf("Whole: %x\n", message)
+		fmt.Printf("Question?: %x\n", message[offset:])
+		fmt.Printf("Answer?: %x\n", message[:offset])
 	}
 }
