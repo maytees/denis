@@ -34,7 +34,7 @@ After the header comes the question section. Parse out the QNAME (has length pre
 For now, hardcode a response for one domain. Take the transaction ID from the query, set the response flags, include the question, add an answer section with your IP. Send it back. Test with dig and see if you get your IP.
 
 
-### Phase 5: Add a lookup table
+### Phase 5: Add a lookup table *(CURRENT)*
 Replace the hardcoded response with a map (either db (sqlite) or json). Look up the queried domain, return the IP if you have it.
 
 
