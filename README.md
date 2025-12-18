@@ -26,7 +26,7 @@ Listen on UDP port 5354 (or 53) and prints out the raw bytes from incoming packe
 DNS header is the first 12 bytes of every packet. Parse the content, see [Header Section Format](https://datatracker.ietf.org/doc/html/rfc1035#section-4.1.15). Just print for now.
 
 
-### Phase 3: Parse the question *(CURRENT)*
+### Phase 3: Parse the question 
 After the header comes the question section. Parse out the QNAME (has length prefix), QTYPE (record type), and QCLASS (just `in` (one) for now). All done with bytes
 
 
@@ -34,7 +34,7 @@ After the header comes the question section. Parse out the QNAME (has length pre
 For now, hardcode a response for one domain. Take the transaction ID from the query, set the response flags, include the question, add an answer section with your IP. Send it back. Test with dig and see if you get your IP.
 
 
-### Phase 5: Add a lookup table
+### Phase 5: Add a lookup table *(CURRENT)*
 Replace the hardcoded response with a map (either db (sqlite) or json). Look up the queried domain, return the IP if you have it.
 
 
