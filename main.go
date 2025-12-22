@@ -202,7 +202,7 @@ func SendAnswer(connection *net.UDPConn,
 	response[offset] = 127
 	response[offset+1] = 0
 	response[offset+2] = 0
-	response[offset+3] = 2
+	response[offset+3] = 1
 	offset += 4
 
 	fmt.Printf("\nResponse: %x\n", response[:offset])
