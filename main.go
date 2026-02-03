@@ -61,7 +61,10 @@ func main() {
 		}
 
 		message := buffer[:input]
-		log.Printf("\n\nFROM \"%v\" (%d bytes)\n%x", clientAddr.String(), input, message)
+		// Prints message
+		// log.Printf("\n\nFROM \"%v\" (%d bytes)\n%x", clientAddr.String(), input, message)
+
+		log.Printf("\n\nFROM \"%v\" (%d bytes)", clientAddr.String(), input)
 
 		offset := 12 // 12 Bytes?
 		rawHeader := message[:offset]
@@ -94,7 +97,7 @@ func main() {
 
 		resolvedDomain := strings.Join(qNameMap, ".")
 		nameLabels := message[nameStart:nameEnd]
-		fmt.Printf("Resolved byte name: %x\n", nameLabels)
+		// fmt.Printf("Resolved byte name: %x\n", nameLabels)
 		fmt.Println("Resolved Domain:", resolvedDomain)
 
 		// qType := binary.BigEndian.Uint16(message[offset : offset+2])
@@ -205,7 +208,7 @@ func SendAnswer(connection *net.UDPConn,
 	response[offset+3] = 1
 	offset += 4
 
-	fmt.Printf("\nResponse: %x\n", response[:offset])
+	// fmt.Printf("\nResponse: %x\n", response[:offset])
 
 	// The colon before the offset removes all the empty stuff after
 	_, err := connection.WriteToUDP(response[:offset], clientAddress)
@@ -213,5 +216,5 @@ func SendAnswer(connection *net.UDPConn,
 		log.Print("Error occured when sending response:", err)
 	}
 
-	fmt.Println("Sent response back.")
+	// fmt.Println("Sent response back.")
 }
