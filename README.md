@@ -13,6 +13,13 @@ Simply use the `dig` command as you would with any other DNS. *At it's current s
 dig @127.0.0.1 -p 5354 google.com
 ```
 
+## Configuration
+The config for DENIS is simple - as of right now, there are just 3 settings (default in parentheses):
+
+1. Enabled (true) - Toggles the DNS server (might come in handy 🤷‍♂️)
+2. Port (53) - Use 53 for live, 5353 for development (5354 on Mac)
+3. Upstream (8.8.8.8:53) - Public DNS server, 8.8.8.8:53 is [Google Public DNS](https://en.wikipedia.org/wiki/Google_Public_DNS), alternatively use [1.1.1.1 for Cloudflare](https://en.wikipedia.org/wiki/1.1.1.1), or [others](https://gist.github.com/mutin-sa/5dcbd35ee436eb629db7872581093bc5)
+
 ## Action Plan
 
 ### Phase 0: Set up project
