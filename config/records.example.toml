@@ -1,5 +1,5 @@
 [[records]]
-name = 'example.local'
+name = 'my.example'
 type = 'A'
 value = '127.0.0.1'
 ttl = 300
