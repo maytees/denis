@@ -18,7 +18,8 @@ The config for DENIS is simple - as of right now, there are just 3 settings (def
 
 1. Enabled (true) - Toggles the DNS server (might come in handy 🤷‍♂️)
 2. Port (53) - Use 53 for live, 5353 for development (5354 on Mac)
-3. Upstream (8.8.8.8:53) - Public DNS server (where to route when Denis doesn't have a local record), 8.8.8.8:53 is [Google Public DNS](https://en.wikipedia.org/wiki/Google_Public_DNS), alternatively use [1.1.1.1 for Cloudflare](https://en.wikipedia.org/wiki/1.1.1.1), or [others](https://gist.github.com/mutin-sa/5dcbd35ee436eb629db7872581093bc5)
+3. Upstream (8.8.8.8) - Public DNS server (where to route when Denis doesn't have a local record), 8.8.8.8 is [Google Public DNS](https://en.wikipedia.org/wiki/Google_Public_DNS), alternatively use [1.1.1.1 for Cloudflare](https://en.wikipedia.org/wiki/1.1.1.1), or [others](https://gist.github.com/mutin-sa/5dcbd35ee436eb629db7872581093bc5).
+  - If no port is given, DENIS will default to port `53`, so specify the port if necessary. Example: `port = 8.8.8.8:53`
 
 ## Action Plan
 

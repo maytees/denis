@@ -11,6 +11,15 @@ func forwardQuery(upstreamAddr string,
 	resolverConn *net.UDPConn,
 	clientAddress *net.UDPAddr,
 ) {
+	_, port, err := parseAddress(upstreamAddr)
+	if err != nil {
+		log.Fatal("Invalid upstream addr: ", err)
+	}
+
+	if port == "" {
+		upstreamAddr += ":53"
+	}
+
 	// Use dial instead of listenUdp
 	connection, err := net.Dial("udp", upstreamAddr)
 	if err != nil {
