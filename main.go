@@ -30,7 +30,7 @@ func main() {
 	records := loadDNSRecords().Records
 
 	if !dnsConfig.Enabled {
-		log.Fatal("DNS is disabled")
+		log.Fatalln("DNS is disabled")
 		return
 	}
 
@@ -106,15 +106,30 @@ func main() {
 
 		// fmt.Printf("QType: %x\nQClass: %x\n", qType, qClass)
 
-		_, ok := findRecordByName(records, resolvedDomain)
+		record, ok := findRecordByName(records, resolvedDomain)
 		if !ok {
 			forwardQuery(dnsConfig.Upstream, message, connection, clientAddr)
 			continue
 		}
 
+		// Check if it's a valid host
+		host, port, variant, err := parseAddress(record.Value)
+
+		if err != nil {
+			log.Fatalln("Could not parse address: ", err)
+		}
+
+		if variant != "v4" {
+			log.Fatalln("Record should be an IPv4 address!")
+		}
+
+		if port != "" {
+			log.Fatalln("Record should not have port number!")
+		}
+
 		// Offset sent here plain beacuse it's the end of the question
 		// TODO: If later on authority and additional are implemented before this call
 		// Use another var, since offset would be different
-		SendAnswer(connection, clientAddr, &header, message, offset, nameLabels)
+		SendAnswer(connection, clientAddr, &header, message, offset, nameLabels, host)
 	}
 }

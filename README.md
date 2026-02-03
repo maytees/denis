@@ -38,11 +38,11 @@ DNS header is the first 12 bytes of every packet. Parse the content, see [Header
 After the header comes the question section. Parse out the QNAME (has length prefix), QTYPE (record type), and QCLASS (just `in` (one) for now). All done with bytes
 
 
-### Phase 4: Build a response (not implemented)
+### Phase 4: Build a response
 For now, hardcode a response for one domain. Take the transaction ID from the query, set the response flags, include the question, add an answer section with your IP. Send it back. Test with dig and see if you get your IP.
 
 
-### Phase 5: Add a lookup table (implemented)
+### Phase 5: Add a lookup table
 Replace the hardcoded response with a map (either db (sqlite) or json). Look up the queried domain, return the IP if you have it.
 
 

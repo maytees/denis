@@ -11,9 +11,9 @@ func forwardQuery(upstreamAddr string,
 	resolverConn *net.UDPConn,
 	clientAddress *net.UDPAddr,
 ) {
-	_, port, err := parseAddress(upstreamAddr)
+	_, port, _, err := parseAddress(upstreamAddr)
 	if err != nil {
-		log.Fatal("Invalid upstream addr: ", err)
+		log.Fatalln("Invalid upstream addr: ", err)
 	}
 
 	if port == "" {
@@ -23,19 +23,19 @@ func forwardQuery(upstreamAddr string,
 	// Use dial instead of listenUdp
 	connection, err := net.Dial("udp", upstreamAddr)
 	if err != nil {
-		log.Fatal("Could not dial upstream: ", err)
+		log.Fatalln("Could not dial upstream: ", err)
 	}
 	defer connection.Close()
 
 	_, err = connection.Write(message)
 	if err != nil {
-		log.Fatal("Could not forward upstream: ", err)
+		log.Fatalln("Could not forward upstream: ", err)
 	}
 
 	response := make([]byte, 512)
 	_, err = connection.Read(response)
 	if err != nil {
-		log.Fatal("Could not read query response: ", err)
+		log.Fatalln("Could not read query response: ", err)
 	}
 
 	_, err = resolverConn.WriteToUDP(response, clientAddress)
@@ -68,8 +68,9 @@ func composeFlag(queryFlags uint16) (answerFlags uint16) {
 	// Z, empty, so is this line necessary?
 	flags |= 0 << 4
 
+	// RCODE (Mockapetrics, p.26)
 	// TODO: have different status', keep as no error for now (0).
-	flags |= 0 // no need to do <<0
+	flags |= 0
 
 	return flags
 }
@@ -80,6 +81,7 @@ func SendAnswer(connection *net.UDPConn,
 	message []byte,
 	questionEndOffset int,
 	nameLabels []byte,
+	resolvedHost string,
 ) {
 	response := make([]byte, 512)
 	offset := 0
@@ -132,10 +134,14 @@ func SendAnswer(connection *net.UDPConn,
 	binary.BigEndian.PutUint16(response[offset:], 4)
 	offset += 2
 
-	response[offset] = 127
-	response[offset+1] = 0
-	response[offset+2] = 0
-	response[offset+3] = 1
+	// ParseIP returns v6 & v4 together, with first 11 being
+	// v6 bytes, and the next 4 being v4, hence, To4() gets the last 4 bytes.
+	ip := net.ParseIP(resolvedHost).To4()
+	response[offset] = ip[0]
+	response[offset+1] = ip[1]
+	response[offset+2] = ip[2]
+	response[offset+3] = ip[3]
+
 	offset += 4
 
 	// fmt.Printf("\nResponse: %x\n", response[:offset])
