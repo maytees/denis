@@ -5,8 +5,6 @@
 > [!NOTE]
 > MacOS uses .local domains, so adding a domain with .local won't work. (not sure about Windows & Linux)
 
-*Using port 5354 beacuse MacOS uses 5353*
-
 This is a custom DNS ([RFC 1035](https://datatracker.ietf.org/doc/html/rfc1035)) server written by me. At its **current** state, Denis is not being used as a replacement for my local DNS Server, but hopefully will be in the future. This project was just made out of interest of learning Go.
 
 ## Testing
