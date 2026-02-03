@@ -1,4 +1,4 @@
  [dns]
 enabled = true
 port = 53
-upstream = '8.8.8.8'
+upstream = '8.8.8.8:53'

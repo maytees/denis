@@ -12,10 +12,22 @@ func cliWelcome() {
 	fmt.Println("Denis DNS server started.")
 }
 
+// TODO: Slow linear search, optimize later
+func findRecordByName(records []Record, target string) (Record, bool) {
+	for _, record := range records {
+		// Records are always stored lowercase
+		if record.Name == strings.ToLower(target) {
+			return record, true
+		}
+	}
+
+	return Record{}, false
+}
+
 func main() {
 	config := loadDNSConfig()
 	dnsConfig := config.DNS
-	// records := loadDNSRecords()
+	records := loadDNSRecords().Records
 
 	if !dnsConfig.Enabled {
 		log.Fatal("DNS is disabled")
@@ -93,6 +105,12 @@ func main() {
 		offset += 2
 
 		// fmt.Printf("QType: %x\nQClass: %x\n", qType, qClass)
+
+		_, ok := findRecordByName(records, resolvedDomain)
+		if !ok {
+			forwardQuery(dnsConfig.Upstream, message, connection, clientAddr)
+			continue
+		}
 
 		// Offset sent here plain beacuse it's the end of the question
 		// TODO: If later on authority and additional are implemented before this call

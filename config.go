@@ -62,7 +62,7 @@ func loadDNSRecords() DNSRecords {
 		}
 
 		data, _ := toml.Marshal(defaultRecords)
-		os.WriteFile(recordsFile, data, 0644)
+		os.WriteFile(recordsFile, data, 0777)
 
 		// No need to read
 		return defaultRecords
@@ -84,12 +84,12 @@ func loadDNSConfig() DenisConfig {
 			DNS: DNSConfig{
 				Enabled:  true,
 				Port:     53,
-				Upstream: "8.8.8.8",
+				Upstream: "8.8.8.8:53",
 			},
 		}
 
 		data, _ := toml.Marshal(defaultConfig)
-		os.WriteFile(configFile, data, 0644)
+		os.WriteFile(configFile, data, 0777)
 
 		// No need to read
 		return defaultConfig

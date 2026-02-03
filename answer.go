@@ -6,6 +6,35 @@ import (
 	"net"
 )
 
+func forwardQuery(upstreamAddr string,
+	message []byte,
+	resolverConn *net.UDPConn,
+	clientAddress *net.UDPAddr,
+) {
+	// Use dial instead of listenUdp
+	connection, err := net.Dial("udp", upstreamAddr)
+	if err != nil {
+		log.Fatal("Could not dial upstream: ", err)
+	}
+	defer connection.Close()
+
+	_, err = connection.Write(message)
+	if err != nil {
+		log.Fatal("Could not forward upstream: ", err)
+	}
+
+	response := make([]byte, 512)
+	_, err = connection.Read(response)
+	if err != nil {
+		log.Fatal("Could not read query response: ", err)
+	}
+
+	_, err = resolverConn.WriteToUDP(response, clientAddress)
+	if err != nil {
+		log.Print("Error occursed when sending response: ", err)
+	}
+}
+
 // TODO: Add options
 func composeFlag(queryFlags uint16) (answerFlags uint16) {
 	var flags uint16 = 0
@@ -78,7 +107,7 @@ func SendAnswer(connection *net.UDPConn,
 	copy(response[offset:], nameLabels)
 	offset += len(nameLabels)
 
-	// Hard coded A record
+	// TODO: Hard coded A record
 	binary.BigEndian.PutUint16(response[offset:], 1)
 	offset += 2
 
@@ -90,6 +119,7 @@ func SendAnswer(connection *net.UDPConn,
 	binary.BigEndian.PutUint32(response[offset:], 0)
 	offset += 4 // TODO: 4 or 2?
 
+	// Length
 	binary.BigEndian.PutUint16(response[offset:], 4)
 	offset += 2
 

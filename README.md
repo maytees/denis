@@ -30,16 +30,16 @@ DNS header is the first 12 bytes of every packet. Parse the content, see [Header
 After the header comes the question section. Parse out the QNAME (has length prefix), QTYPE (record type), and QCLASS (just `in` (one) for now). All done with bytes
 
 
-### Phase 4: Build a response *(CURRENT)*
+### Phase 4: Build a response (not implemented)
 For now, hardcode a response for one domain. Take the transaction ID from the query, set the response flags, include the question, add an answer section with your IP. Send it back. Test with dig and see if you get your IP.
 
 
-### Phase 5: Add a lookup table *(WIP)*
+### Phase 5: Add a lookup table (implemented)
 Replace the hardcoded response with a map (either db (sqlite) or json). Look up the queried domain, return the IP if you have it.
 
 
 ### Phase 6: Forwarding
-If you don't have the domain, forward the query to 8.8.8.8 (google) or 1.1.1.1 (cloudflare), get the response, send it back.
+If you don't have the domain, forward the query to 8.8.8.8:53 (google) or 1.1.1.1 (cloudflare), get the response, send it back.
 
-### Phase 7: Caching 
+### Phase 7: Caching (not implemented)
 Store responses from upstream to make queries faster. Respect the TTL value from the response. Caching won't be necessary for local because it's already very fast. Only do it if you use a DB.
