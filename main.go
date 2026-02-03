@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"net"
+	"strconv"
 	"strings"
 )
 
@@ -11,14 +12,20 @@ func cliWelcome() {
 	fmt.Println("Denis DNS server started.")
 }
 
-type ServerConfig struct {
-	Port int
-}
-
 func main() {
+	config := loadDNSConfig()
+	dnsConfig := config.DNS
+	// records := loadDNSRecords()
+
+	if !dnsConfig.Enabled {
+		log.Fatal("DNS is disabled")
+		return
+	}
+
 	cliWelcome()
 
-	udpAddress, err := net.ResolveUDPAddr("udp", "127.0.0.1:53")
+	socketAddr := "127.0.0.1:" + strconv.Itoa(dnsConfig.Port)
+	udpAddress, err := net.ResolveUDPAddr("udp", socketAddr)
 	if err != nil {
 		log.Fatalln(err)
 	}

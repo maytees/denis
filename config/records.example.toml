@@ -1,0 +1,5 @@
+[[records]]
+name = 'example.local'
+type = 'A'
+value = '127.0.0.1'
+ttl = 300
