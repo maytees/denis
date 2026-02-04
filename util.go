@@ -38,3 +38,11 @@ func parseAddress(addr string) (host string, port string, variant string, err er
 
 	return "", "", "", err
 }
+
+func boolToUint16(condition bool) uint16 {
+	if condition {
+		return 1
+	}
+
+	return 0
+}

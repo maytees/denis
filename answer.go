@@ -59,7 +59,18 @@ func SendAnswer(connection *net.UDPConn,
 	binary.BigEndian.PutUint16(response[offset:], queryHeader.ID)
 	offset += 2
 
-	flags := composeFlag(queryHeader.FLAGS)
+	flags := composeFlag(
+		true,                 // QR 1 for response
+		0,                    // OPCODE 0 for standard query
+		true,                 // AA 1 bcz DENIS owns the record
+		false,                // TC 0, not truncated
+		queryHeader.FLAGS.RD, // RD Copy RD from
+		true,                 // RA 1, supports recursion
+
+		// TODO: return correct error handling
+		0, // RCODE
+	)
+
 	binary.BigEndian.PutUint16(response[offset:], flags)
 	offset += 2
 
