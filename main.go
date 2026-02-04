@@ -61,12 +61,11 @@ func main() {
 		}
 
 		message := buffer[:input]
-		// Prints message
-		// log.Printf("\n\nFROM \"%v\" (%d bytes)\n%x", clientAddr.String(), input, message)
 
+		// log.Printf("\n\nFROM \"%v\" (%d bytes)\n%x", clientAddr.String(), input, message)
 		log.Printf("\n\nFROM \"%v\" (%d bytes)", clientAddr.String(), input)
 
-		offset := 12 // 12 Bytes?
+		offset := 12
 		rawHeader := message[:offset]
 
 		header := ParseHeader(rawHeader)

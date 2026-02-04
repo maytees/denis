@@ -44,37 +44,6 @@ func forwardQuery(upstreamAddr string,
 	}
 }
 
-// TODO: Add options
-func composeFlag(queryFlags uint16) (answerFlags uint16) {
-	var flags uint16 = 0
-
-	// QR, 1 for response, 0 for query
-	flags |= 1 << 15
-
-	// Opcode, 4 bits, 15 - 4 = 11, 0 = standard query
-	flags |= 0 << 11
-
-	// AA, not sure, set to 0
-	flags |= 0 << 10
-	// TC, not sure, set to 0
-	flags |= 0 << 9
-
-	// RD, copies bit at pos 8 (RD) from queryFlags
-	flags |= (queryFlags >> 8) & 1 << 8
-
-	// RA, recursion available
-	flags |= 1 << 7
-
-	// Z, empty, so is this line necessary?
-	flags |= 0 << 4
-
-	// RCODE (Mockapetrics, p.26)
-	// TODO: have different status', keep as no error for now (0).
-	flags |= 0
-
-	return flags
-}
-
 func SendAnswer(connection *net.UDPConn,
 	clientAddress *net.UDPAddr,
 	queryHeader *Header,
@@ -114,10 +83,13 @@ func SendAnswer(connection *net.UDPConn,
 	copy(response[offset:], message[12:questionEndOffset])
 	offset += questionEndOffset - 12
 
+	// Answer section
+
+	// This adds nameLabels (from original query) to the end of response
 	copy(response[offset:], nameLabels)
 	offset += len(nameLabels)
 
-	// TODO: Hard coded A record
+	// TODO: Don't have hard coded A record
 	binary.BigEndian.PutUint16(response[offset:], 1)
 	offset += 2
 
@@ -129,9 +101,11 @@ func SendAnswer(connection *net.UDPConn,
 	binary.BigEndian.PutUint32(response[offset:], record.TTL)
 	offset += 4
 
-	// Length
+	// RDLENGTH
 	binary.BigEndian.PutUint16(response[offset:], 4)
 	offset += 2
+
+	// RDATA
 
 	// ParseIP returns v6 & v4 together, with first 11 being
 	// v6 bytes, and the next 4 being v4, hence, To4() gets the last 4 bytes.
@@ -143,13 +117,9 @@ func SendAnswer(connection *net.UDPConn,
 
 	offset += 4
 
-	// fmt.Printf("\nResponse: %x\n", response[:offset])
-
 	// The colon before the offset removes all the empty stuff after
 	_, err := connection.WriteToUDP(response[:offset], clientAddress)
 	if err != nil {
 		log.Print("Error occured when sending response:", err)
 	}
-
-	// fmt.Println("Sent response back.")
 }
