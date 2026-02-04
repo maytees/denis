@@ -50,5 +50,5 @@ Replace the hardcoded response with a map (either db (sqlite) or json). Look up 
 ### Phase 6: Forwarding
 If you don't have the domain, forward the query to 8.8.8.8:53 (google) or 1.1.1.1 (cloudflare), get the response, send it back.
 
-### Phase 7: Caching (not implemented)
+### Phase 7: Caching (1/2 - doesn't cache forward queries)
 Store responses from upstream to make queries faster. Respect the TTL value from the response. Caching won't be necessary for local because it's already very fast. Only do it if you use a DB.
