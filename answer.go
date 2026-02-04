@@ -81,7 +81,7 @@ func SendAnswer(connection *net.UDPConn,
 	message []byte,
 	questionEndOffset int,
 	nameLabels []byte,
-	resolvedHost string,
+	record Record,
 ) {
 	response := make([]byte, 512)
 	offset := 0
@@ -114,7 +114,6 @@ func SendAnswer(connection *net.UDPConn,
 	copy(response[offset:], message[12:questionEndOffset])
 	offset += questionEndOffset - 12
 
-	// Answer - TODO: Don't hardcode
 	copy(response[offset:], nameLabels)
 	offset += len(nameLabels)
 
@@ -127,8 +126,8 @@ func SendAnswer(connection *net.UDPConn,
 	offset += 2
 
 	// Hard coded 0 cache TTL
-	binary.BigEndian.PutUint32(response[offset:], 0)
-	offset += 4 // TODO: 4 or 2?
+	binary.BigEndian.PutUint32(response[offset:], record.TTL)
+	offset += 4
 
 	// Length
 	binary.BigEndian.PutUint16(response[offset:], 4)
@@ -136,7 +135,7 @@ func SendAnswer(connection *net.UDPConn,
 
 	// ParseIP returns v6 & v4 together, with first 11 being
 	// v6 bytes, and the next 4 being v4, hence, To4() gets the last 4 bytes.
-	ip := net.ParseIP(resolvedHost).To4()
+	ip := net.ParseIP(record.Value).To4()
 	response[offset] = ip[0]
 	response[offset+1] = ip[1]
 	response[offset+2] = ip[2]

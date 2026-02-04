@@ -13,7 +13,7 @@ type Record struct {
 	Name  string `toml:"name"`
 	Type  string `toml:"type"`
 	Value string `toml:"value"`
-	TTL   int    `toml:"ttl"`
+	TTL   uint32 `toml:"ttl"`
 }
 
 // Holds many records ^^

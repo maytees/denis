@@ -29,6 +29,8 @@ func main() {
 	dnsConfig := config.DNS
 	records := loadDNSRecords().Records
 
+	// cache := cache.New(5*time.Minute, 10*time.Minute)
+
 	if !dnsConfig.Enabled {
 		log.Fatalln("DNS is disabled")
 		return
@@ -112,8 +114,8 @@ func main() {
 			continue
 		}
 
-		// Check if it's a valid host
-		host, port, variant, err := parseAddress(record.Value)
+		// Check if it's a valid value
+		_, port, variant, err := parseAddress(record.Value)
 
 		if err != nil {
 			log.Fatalln("Could not parse address: ", err)
@@ -130,6 +132,6 @@ func main() {
 		// Offset sent here plain beacuse it's the end of the question
 		// TODO: If later on authority and additional are implemented before this call
 		// Use another var, since offset would be different
-		SendAnswer(connection, clientAddr, &header, message, offset, nameLabels, host)
+		SendAnswer(connection, clientAddr, &header, message, offset, nameLabels, record)
 	}
 }
