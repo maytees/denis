@@ -11,7 +11,7 @@ type Flags struct {
 	TC     bool
 	RD     bool
 	RA     bool
-	Z      uint8 // Should always be 00
+	Z      uint8 // Should always be 0
 	RCODE  uint8
 }
 
@@ -26,8 +26,7 @@ type Header struct {
 
 func ParseHeader(header []byte) Header {
 	return Header{
-		ID: binary.BigEndian.Uint16(header[0:2]),
-		// FLAGS:   binary.BigEndian.Uint16(header[2:4]),
+		ID:      binary.BigEndian.Uint16(header[0:2]),
 		FLAGS:   composeFlagFromBytes(header[2:4]),
 		QDCount: binary.BigEndian.Uint16(header[4:6]),
 		ANCount: binary.BigEndian.Uint16(header[6:8]),

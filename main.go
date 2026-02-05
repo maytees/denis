@@ -66,9 +66,8 @@ func main() {
 		log.Printf("\n\nFROM \"%v\" (%d bytes)", clientAddr.String(), input)
 
 		offset := 12
-		rawHeader := message[:offset]
 
-		header := ParseHeader(rawHeader)
+		header := ParseHeader(message[:offset])
 		// fmt.Printf("\nHeader: \n\tID: %v\n\tFlags: %v\n\tQDCOUNT (Question): %v\n\tANCOUNT (Answer): %v\n\tNSCOUNT (Authority): %v\n\tARCOUNT (Additional): %v\n\t\n",
 		// 	header.ID,
 		// 	header.FLAGS,
@@ -77,27 +76,10 @@ func main() {
 		// 	header.NSCount,
 		// 	header.ARCount)
 
-		qNameMap := []string{}
-		nameStart := offset
-		nameEnd := -1
+		name := parseLabel(message, &offset)
 
-		for {
-			length := message[offset]
-			offset += 1
-			qNameMap = append(qNameMap, string(message[offset:(offset+int(length))]))
-			offset += int(length)
-
-			if message[offset] == 0 {
-				offset += 1 // moves off the 0
-				nameEnd = offset
-				break
-			}
-		}
-
-		resolvedDomain := strings.Join(qNameMap, ".")
-		nameLabels := message[nameStart:nameEnd]
 		// fmt.Printf("Resolved byte name: %x\n", nameLabels)
-		fmt.Println("Resolved Domain:", resolvedDomain)
+		fmt.Println("Resolved Domain:", name.String)
 
 		// qType := binary.BigEndian.Uint16(message[offset : offset+2])
 		offset += 2
@@ -107,7 +89,7 @@ func main() {
 
 		// fmt.Printf("QType: %x\nQClass: %x\n", qType, qClass)
 
-		record, ok := findRecordByName(records, resolvedDomain)
+		record, ok := findRecordByName(records, name.String)
 		if !ok {
 			forwardQuery(dnsConfig.Upstream, message, connection, clientAddr)
 			continue
@@ -131,6 +113,12 @@ func main() {
 		// Offset sent here plain beacuse it's the end of the question
 		// TODO: If later on authority and additional are implemented before this call
 		// Use another var, since offset would be different
-		SendAnswer(connection, clientAddr, &header, message, offset, nameLabels, record)
+		SendAnswer(connection,
+			clientAddr,
+			&header,
+			message,
+			offset,
+			name.Raw,
+			record)
 	}
 }
