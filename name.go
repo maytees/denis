@@ -6,7 +6,7 @@ import (
 
 type Name struct {
 	Raw    []byte // Includes label lengths
-	String string
+	Domain string
 }
 
 func parseLabel(message []byte, offset *int) Name {
@@ -31,6 +31,6 @@ func parseLabel(message []byte, offset *int) Name {
 
 	return Name{
 		Raw:    message[start:*offset],
-		String: builder.String(),
+		Domain: builder.String(),
 	}
 }

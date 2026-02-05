@@ -79,7 +79,7 @@ func main() {
 		name := parseLabel(message, &offset)
 
 		// fmt.Printf("Resolved byte name: %x\n", nameLabels)
-		fmt.Println("Resolved Domain:", name.String)
+		fmt.Println("Resolved Domain:", name.Domain)
 
 		// qType := binary.BigEndian.Uint16(message[offset : offset+2])
 		offset += 2
@@ -89,7 +89,7 @@ func main() {
 
 		// fmt.Printf("QType: %x\nQClass: %x\n", qType, qClass)
 
-		record, ok := findRecordByName(records, name.String)
+		record, ok := findRecordByName(records, name.Domain)
 		if !ok {
 			forwardQuery(dnsConfig.Upstream, message, connection, clientAddr)
 			continue
