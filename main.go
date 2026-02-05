@@ -76,7 +76,7 @@ func main() {
 		// 	header.NSCount,
 		// 	header.ARCount)
 
-		name := parseLabel(message, &offset)
+		name := parseName(message, &offset)
 
 		// fmt.Printf("Resolved byte name: %x\n", nameLabels)
 		fmt.Println("Resolved Domain:", name.Domain)

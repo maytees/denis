@@ -9,7 +9,7 @@ type Name struct {
 	Domain string
 }
 
-func parseLabel(message []byte, offset *int) Name {
+func parseName(message []byte, offset *int) Name {
 	start := *offset
 	var builder strings.Builder
 
