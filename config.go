@@ -46,7 +46,7 @@ func getConfigPath() string {
 	return configPath
 }
 
-func loadDNSRecords() DNSRecords {
+func loadDNSRecords() []Record {
 	configPath := getConfigPath()
 	recordsFile := filepath.Join(configPath, "records.toml")
 
@@ -66,17 +66,17 @@ func loadDNSRecords() DNSRecords {
 		os.WriteFile(recordsFile, data, 0777)
 
 		// No need to read
-		return defaultRecords
+		return defaultRecords.Records
 	}
 
 	// Read & unmarshal (deserialize)
 	data, _ := os.ReadFile(recordsFile)
 	var cfg DNSRecords
 	toml.Unmarshal(data, &cfg)
-	return cfg
+	return cfg.Records
 }
 
-func loadDNSConfig() DenisConfig {
+func loadDNSConfig() (DenisConfig, string) {
 	configPath := getConfigPath()
 	configFile := filepath.Join(configPath, "config.toml")
 
@@ -93,14 +93,14 @@ func loadDNSConfig() DenisConfig {
 		os.WriteFile(configFile, data, 0777)
 
 		// No need to read
-		return defaultConfig
+		return defaultConfig, configPath
 	}
 
 	// Read & unmarshal (deserialize)
 	data, _ := os.ReadFile(configFile)
 	var cfg DenisConfig
 	toml.Unmarshal(data, &cfg)
-	return cfg
+	return cfg, configPath
 }
 
 // TODO: Slow linear search, optimize later

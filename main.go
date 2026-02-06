@@ -5,25 +5,64 @@ import (
 	"log"
 	"net"
 	"strconv"
+
+	"github.com/fatih/color"
 )
 
-func cliWelcome() {
-	fmt.Println("Denis DNS server started.")
+func cliWelcome(configPath string, recordsLength int, dnsAddr string) {
+	gray := color.New(color.FgHiBlack).SprintFunc()
+	green := color.New(color.FgGreen).SprintFunc()
+	// blue := color.New(color.FgBlue).SprintFunc()
+	// cyan := color.New(color.FgCyan).SprintFunc()
+	red := color.New(color.FgRed).SprintFunc()
+	// black := color.New(color.FgBlack).SprintFunc()
+	yellow := color.New(color.FgYellow).SprintFunc()
+	defer color.Unset()
+
+	// Header
+	if configPath == "" {
+		fmt.Println(red("\ncould not find config"))
+	}
+
+	fmt.Println(gray("\nloading config from ", configPath))
+
+	if recordsLength > 0 {
+		fmt.Print(gray("found "))
+		fmt.Print(color.WhiteString("%d", recordsLength))
+		fmt.Print(gray(" DNS records"))
+	} else {
+		fmt.Printf("%s  no DNS records found\n", yellow("⚠"))
+	}
+
+	fmt.Println()
+	fmt.Println()
+
+	if dnsAddr == "disabled" {
+		fmt.Printf(red("→  dns disabled\n"))
+		fmt.Println()
+
+		fmt.Println(red("aborting."))
+	} else {
+		fmt.Printf("%s  dns listening on %s\n", green("➜"), gray(fmt.Sprintf("%s", dnsAddr)))
+		fmt.Println()
+
+		fmt.Println(green("ready"))
+	}
+
+	fmt.Println()
 }
 
 func main() {
-	config := loadDNSConfig()
+	config, confpath := loadDNSConfig()
 	dnsConfig := config.DNS
-	records := loadDNSRecords().Records
+	records := loadDNSRecords()
 
 	// cache := cache.New(5*time.Minute, 10*time.Minute)
 
 	if !dnsConfig.Enabled {
-		log.Fatalln("DNS is disabled")
+		cliWelcome(confpath, len(records), "disabled")
 		return
 	}
-
-	cliWelcome()
 
 	socketAddr := "127.0.0.1:" + strconv.Itoa(dnsConfig.Port)
 	udpAddress, err := net.ResolveUDPAddr("udp", socketAddr)
@@ -36,6 +75,8 @@ func main() {
 		log.Fatalln(err)
 	}
 	defer connection.Close()
+
+	cliWelcome(confpath, len(records), socketAddr)
 
 	// UDP messages 512 octets (bytes) or less
 	buffer := make([]byte, 512)
