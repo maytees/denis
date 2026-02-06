@@ -5,23 +5,10 @@ import (
 	"log"
 	"net"
 	"strconv"
-	"strings"
 )
 
 func cliWelcome() {
 	fmt.Println("Denis DNS server started.")
-}
-
-// TODO: Slow linear search, optimize later
-func findRecordByName(records []Record, target string) (Record, bool) {
-	for _, record := range records {
-		// Records are always stored lowercase
-		if record.Name == strings.ToLower(target) {
-			return record, true
-		}
-	}
-
-	return Record{}, false
 }
 
 func main() {

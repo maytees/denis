@@ -1,5 +1,7 @@
 package main
 
+import "strings"
+
 type RecordType uint16
 
 const (
@@ -83,4 +85,16 @@ type ResourceRecord struct {
 
 	// Should this be composite with raw?
 	RData string
+}
+
+// TODO: Slow linear search, optimize later
+func findRecordByName(records []Record, target string) (Record, bool) {
+	for _, record := range records {
+		// Records are always stored lowercase
+		if record.Name == strings.ToLower(target) {
+			return record, true
+		}
+	}
+
+	return Record{}, false
 }
