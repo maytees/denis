@@ -62,23 +62,14 @@ func main() {
 
 		message := buffer[:input]
 
-		// log.Printf("\n\nFROM \"%v\" (%d bytes)\n%x", clientAddr.String(), input, message)
 		log.Printf("\n\nFROM \"%v\" (%d bytes)", clientAddr.String(), input)
 
 		offset := 12
 
 		header := ParseHeader(message[:offset])
-		// fmt.Printf("\nHeader: \n\tID: %v\n\tFlags: %v\n\tQDCOUNT (Question): %v\n\tANCOUNT (Answer): %v\n\tNSCOUNT (Authority): %v\n\tARCOUNT (Additional): %v\n\t\n",
-		// 	header.ID,
-		// 	header.FLAGS,
-		// 	header.QDCount,
-		// 	header.ANCount,
-		// 	header.NSCount,
-		// 	header.ARCount)
 
 		name := parseName(message, &offset)
 
-		// fmt.Printf("Resolved byte name: %x\n", nameLabels)
 		fmt.Println("Resolved Domain:", name.Domain)
 
 		// qType := binary.BigEndian.Uint16(message[offset : offset+2])
@@ -87,15 +78,12 @@ func main() {
 		// qClass := binary.BigEndian.Uint16(message[offset : offset+2])
 		offset += 2
 
-		// fmt.Printf("QType: %x\nQClass: %x\n", qType, qClass)
-
 		record, ok := findRecordByName(records, name.Domain)
 		if !ok {
 			forwardQuery(dnsConfig.Upstream, message, connection, clientAddr)
 			continue
 		}
 
-		// Check if it's a valid value
 		_, port, variant, err := parseAddress(record.Value)
 
 		if err != nil {
@@ -111,7 +99,7 @@ func main() {
 		}
 
 		// Offset sent here plain beacuse it's the end of the question
-		// TODO: If later on authority and additional are implemented before this call
+		// NOTE: If later on authority and additional are implemented before this call
 		// Use another var, since offset would be different
 		SendAnswer(connection,
 			clientAddr,

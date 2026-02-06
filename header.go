@@ -2,6 +2,8 @@ package main
 
 import (
 	"encoding/binary"
+	"fmt"
+	"strings"
 )
 
 type Flags struct {
@@ -15,6 +17,33 @@ type Flags struct {
 	RCODE  uint8
 }
 
+func (f Flags) String() string {
+	var flags []string
+
+	if f.QR {
+		flags = append(flags, "qr")
+	}
+
+	if f.AA {
+		flags = append(flags, "aa")
+	}
+
+	if f.TC {
+		flags = append(flags, "tc")
+	}
+
+	if f.RD {
+		flags = append(flags, "rd")
+	}
+
+	if f.RA {
+		flags = append(flags, "ra")
+	}
+
+	// TODO: Add opcode & rcode maps
+	return fmt.Sprintf("[%s] | OPCODE: %d | RCODE: %d", strings.Join(flags, " "), f.OPCODE, f.RCODE)
+}
+
 type Header struct {
 	ID      uint16
 	FLAGS   Flags
@@ -22,6 +51,17 @@ type Header struct {
 	ANCount uint16
 	NSCount uint16
 	ARCount uint16
+}
+
+func (h Header) String() string {
+	return fmt.Sprintf("ID: %d | Flags: %v | #Questions: %d | #Answers: %d | #Authority: %d | #Additional: %d",
+		h.ID,
+		h.FLAGS,
+		h.QDCount,
+		h.ANCount,
+		h.NSCount,
+		h.ARCount,
+	)
 }
 
 func ParseHeader(header []byte) Header {
