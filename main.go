@@ -39,6 +39,7 @@ func main() {
 
 	// UDP messages 512 octets (bytes) or less
 	buffer := make([]byte, 512)
+	// UDP messages 512 octets (bytes) or less
 
 	for {
 		input, clientAddr, err := connection.ReadFromUDP(buffer)

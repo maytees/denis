@@ -1,12 +1,17 @@
 package main
 
 import (
+	"fmt"
 	"strings"
 )
 
 type Name struct {
 	Raw    []byte // Includes label lengths
 	Domain string
+}
+
+func (n Name) String() string {
+	return fmt.Sprintf("%s", n.Domain)
 }
 
 func parseName(message []byte, offset *int) Name {

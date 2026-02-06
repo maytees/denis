@@ -3,6 +3,7 @@ package main
 import (
 	"os"
 	"path/filepath"
+	"strings"
 
 	"github.com/kirsle/configdir"
 	"github.com/pelletier/go-toml/v2"
@@ -100,4 +101,16 @@ func loadDNSConfig() DenisConfig {
 	var cfg DenisConfig
 	toml.Unmarshal(data, &cfg)
 	return cfg
+}
+
+// TODO: Slow linear search, optimize later
+func findRecordByName(records []Record, target string) (Record, bool) {
+	for _, record := range records {
+		// Records are always stored lowercase
+		if record.Name == strings.ToLower(target) {
+			return record, true
+		}
+	}
+
+	return Record{}, false
 }

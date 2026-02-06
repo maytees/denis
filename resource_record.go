@@ -1,6 +1,8 @@
 package main
 
-import "strings"
+import (
+	"fmt"
+)
 
 type RecordType uint16
 
@@ -87,14 +89,13 @@ type ResourceRecord struct {
 	RData string
 }
 
-// TODO: Slow linear search, optimize later
-func findRecordByName(records []Record, target string) (Record, bool) {
-	for _, record := range records {
-		// Records are always stored lowercase
-		if record.Name == strings.ToLower(target) {
-			return record, true
-		}
-	}
-
-	return Record{}, false
+func (r ResourceRecord) String() string {
+	return fmt.Sprintf("Name: %v | Type: %s | Class: %s | TTL: %dms | Length: %d | Data: %s",
+		r.Name,
+		RecordTypeNames[r.Type],
+		ClassValueNames[r.Class],
+		r.TTL,
+		r.RDlength,
+		r.RData,
+	)
 }
