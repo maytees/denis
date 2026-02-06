@@ -1,6 +1,6 @@
 # Denis DNS server
 > [!NOTE]
-> None of the code in this repo was AI Generated, everything is hand written. (necessary to mention)
+> Code in this repo is not AI generated, everything is hand written. If any parts were *aided* (not written) by AI, the file/block will mention.
 
 > [!NOTE]
 > MacOS uses .local domains, so adding a domain with .local won't work. (not sure about Windows & Linux)
