@@ -1,6 +1,7 @@
-testoutput.txt
-
 config/records.toml
 config/config.toml
 
 tmp
+
+dist/
+denis
