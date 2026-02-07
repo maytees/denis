@@ -14,9 +14,8 @@ build:
 
 # Run without hot reloading
 [group('dev')]
-start:
-	go build
-	sudo ./denis
+start: build
+	sudo dist/denis
 
 # Clean build files
 [group('dev')]
