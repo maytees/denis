@@ -1,11 +1,11 @@
-package main
+package util
 
 import (
 	"net"
 	"strings"
 )
 
-func getVariant(host string) string {
+func GetVariant(host string) string {
 	if ip := net.ParseIP(host); ip != nil {
 		if ip.To4() != nil {
 			return "v4"
@@ -17,16 +17,16 @@ func getVariant(host string) string {
 	return "domain"
 }
 
-func parseAddress(addr string) (host string, port string, variant string, err error) {
+func ParseAddress(addr string) (host string, port string, variant string, err error) {
 	host, port, err = net.SplitHostPort(addr)
 	if err == nil {
-		variant = getVariant(host)
+		variant = GetVariant(host)
 		return host, port, variant, nil
 	}
 
 	// Check if valid ip (v6 or v4)
 	if ip := net.ParseIP(addr); ip != nil {
-		variant = getVariant(addr)
+		variant = GetVariant(addr)
 
 		return addr, "", variant, nil
 	}
@@ -39,7 +39,7 @@ func parseAddress(addr string) (host string, port string, variant string, err er
 	return "", "", "", err
 }
 
-func boolToUint16(condition bool) uint16 {
+func BoolToUint16(condition bool) uint16 {
 	if condition {
 		return 1
 	}

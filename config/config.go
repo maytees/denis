@@ -1,4 +1,4 @@
-package main
+package config
 
 import (
 	"os"
@@ -35,7 +35,7 @@ type DenisConfig struct {
 }
 
 // Gets config directory (not file)
-func getConfigPath() string {
+func GetConfigPath() string {
 	// Checks current dir (for local dev)
 	if _, err := os.Stat("./config"); err == nil {
 		return "./config"
@@ -46,8 +46,8 @@ func getConfigPath() string {
 	return configPath
 }
 
-func loadDNSRecords() []Record {
-	configPath := getConfigPath()
+func LoadDNSRecords() []Record {
+	configPath := GetConfigPath()
 	recordsFile := filepath.Join(configPath, "records.toml")
 
 	if _, err := os.Stat(recordsFile); os.IsNotExist(err) {
@@ -76,8 +76,8 @@ func loadDNSRecords() []Record {
 	return cfg.Records
 }
 
-func loadDNSConfig() (DenisConfig, string) {
-	configPath := getConfigPath()
+func LoadDNSConfig() (DenisConfig, string) {
+	configPath := GetConfigPath()
 	configFile := filepath.Join(configPath, "config.toml")
 
 	if _, err := os.Stat(configFile); os.IsNotExist(err) {
@@ -104,7 +104,7 @@ func loadDNSConfig() (DenisConfig, string) {
 }
 
 // TODO: Slow linear search, optimize later
-func findRecordByName(records []Record, target string) (Record, bool) {
+func FindRecordByName(records []Record, target string) (Record, bool) {
 	for _, record := range records {
 		// Records are always stored lowercase
 		if record.Name == strings.ToLower(target) {

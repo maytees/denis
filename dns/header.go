@@ -1,6 +1,7 @@
-package main
+package dns
 
 import (
+	"denis/util"
 	"encoding/binary"
 	"fmt"
 	"strings"
@@ -64,7 +65,7 @@ func (h Header) String() string {
 	)
 }
 
-func ParseHeader(header []byte) Header {
+func parseHeader(header []byte) Header {
 	return Header{
 		ID:      binary.BigEndian.Uint16(header[0:2]),
 		FLAGS:   composeFlagFromBytes(header[2:4]),
@@ -88,22 +89,22 @@ func composeFlag(
 	var flags uint16 = 0
 
 	// QR, 1 for response, 0 for query
-	flags |= boolToUint16(QR) << 15
+	flags |= util.BoolToUint16(QR) << 15
 
 	// Opcode, 4 bits, 15 - 4 = 11, 0 = standard query
 	flags |= uint16(OPCODE) << 11
 
 	// AA, not sure, set to 0
-	flags |= boolToUint16(AA) << 10
+	flags |= util.BoolToUint16(AA) << 10
 	// TC, not sure, set to 0
-	flags |= boolToUint16(TC) << 9
+	flags |= util.BoolToUint16(TC) << 9
 
 	// RD, copies bit at pos 8 (RD) from queryFlags
 	// flags |= (queryFlags >> 8) & 1 << 8
-	flags |= boolToUint16(RD) << 8
+	flags |= util.BoolToUint16(RD) << 8
 
 	// RA, recursion available
-	flags |= boolToUint16(RA) << 7
+	flags |= util.BoolToUint16(RA) << 7
 
 	// Z, empty, so is this line necessary?
 	flags |= 0 << 4

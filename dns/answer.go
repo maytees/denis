@@ -1,6 +1,8 @@
-package main
+package dns
 
 import (
+	"denis/config"
+	"denis/util"
 	"encoding/binary"
 	"log"
 	"net"
@@ -11,7 +13,7 @@ func forwardQuery(upstreamAddr string,
 	resolverConn *net.UDPConn,
 	clientAddress *net.UDPAddr,
 ) {
-	_, port, _, err := parseAddress(upstreamAddr)
+	_, port, _, err := util.ParseAddress(upstreamAddr)
 	if err != nil {
 		log.Fatalln("Invalid upstream addr: ", err)
 	}
@@ -44,13 +46,13 @@ func forwardQuery(upstreamAddr string,
 	}
 }
 
-func SendAnswer(connection *net.UDPConn,
+func sendAnswer(connection *net.UDPConn,
 	clientAddress *net.UDPAddr,
 	queryHeader *Header,
 	message []byte,
 	questionEndOffset int,
 	nameLabels []byte,
-	record Record,
+	record config.Record,
 ) {
 	response := make([]byte, 512)
 	offset := 0
