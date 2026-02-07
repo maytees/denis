@@ -1,4 +1,4 @@
-// The welcome cli builder development was AIDED by AI.
+// The welcome cli *BUILDER* development was AIDED by AI.
 //
 // This CLI welcome uses a builder pattern to display
 // what DENIS is running, and how. It's modular this way
@@ -8,6 +8,8 @@ package main
 
 import (
 	"fmt"
+	"math/rand"
+	"os"
 
 	"github.com/fatih/color"
 )
@@ -34,6 +36,24 @@ var (
 	red    = color.New(color.FgRed).SprintFunc()
 	yellow = color.New(color.FgYellow).SprintFunc()
 )
+
+var welcomeMessages = []string{
+	"Denis knows where everything lives.",
+	"Your network, named your way.",
+	"Local names for local things.",
+	"No more memorizing ports.",
+	"Because 192.168.1.47:8096 is not a name.",
+	"Your domains. Your machine. Your rules.",
+	"DNS for the rest of us.",
+	"Giving your services names they deserve.",
+	"Home is where the hostname is.",
+	"Making local feel less lonely.",
+	"Names you'll actually remember.",
+	"The phonebook for your homelab.",
+	"localhost, but friendlier.",
+	"Finally, URLs that make sense.",
+	"Your services called by name, not number.",
+}
 
 type ServiceBuilder struct {
 	services []ServiceStatus
@@ -64,6 +84,8 @@ func (b *ServiceBuilder) Build() []ServiceStatus {
 func cliWelcome(config CLIConfig) {
 	defer color.Unset()
 
+	color.RGB(rand.Intn(255), rand.Intn(255), rand.Intn(255)).Printf("DENIS - %s\n", welcomeMessages[rand.Intn(len(welcomeMessages))])
+
 	// header
 	fmt.Println()
 	if config.ConfigPath == "" {
@@ -86,11 +108,16 @@ func cliWelcome(config CLIConfig) {
 
 	// services status
 	enabledCount := 0
+	successCount := 0
 	for _, service := range config.Services {
 		if service.Enabled {
 			enabledCount++
-			printServiceStatus(service)
 
+			if service.Error == nil {
+				successCount++
+			}
+
+			printServiceStatus(service)
 			continue
 		}
 
@@ -101,7 +128,14 @@ func cliWelcome(config CLIConfig) {
 	fmt.Println()
 	if enabledCount == 0 {
 		fmt.Println(red("aborting."))
-		fmt.Println(gray("no services enabled"))
+		fmt.Println(gray("no services enabled\n"))
+
+		os.Exit(1)
+	} else if successCount == 0 {
+		fmt.Println(red("aborting."))
+		fmt.Println(gray("all services failed to start\n"))
+
+		os.Exit(1)
 	} else {
 		fmt.Println(green("ready"))
 	}
