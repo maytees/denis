@@ -36,7 +36,7 @@ func StartDNS(dnsConfig *config.DNSConfig, records *[]config.Record) error {
 
 			message := buffer[:input]
 
-			log.Printf("\n\nFROM \"%v\" (%d bytes)", clientAddr.String(), input)
+			fmt.Printf("\nFROM \"%v\" (%d bytes)\n", clientAddr.String(), input)
 
 			offset := 12
 
@@ -61,15 +61,18 @@ func StartDNS(dnsConfig *config.DNSConfig, records *[]config.Record) error {
 			_, port, variant, err := util.ParseAddress(record.Value)
 
 			if err != nil {
-				log.Fatalln("Could not parse address: ", err)
+				fmt.Println("Could not parse address: ", err)
+				continue
 			}
 
 			if variant != "v4" {
-				log.Fatalln("Record should be an IPv4 address!")
+				fmt.Println("Record should be an IPv4 address!")
+				continue
 			}
 
 			if port != "" {
-				log.Fatalln("Record should not have port number!")
+				fmt.Println("Record should not have port number!")
+				continue
 			}
 
 			// Offset sent here plain beacuse it's the end of the question
