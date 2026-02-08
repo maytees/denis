@@ -90,6 +90,19 @@ just dev
 sudo air
 ```
 
+4. Test using dig
+Dig is a command line tool used to query DNS servers for records. If you haven't set DENIS as your default DNS, you need to pass the @addr (+ :port if you aren't running on :53) to tell dig to query DENIS.
+
+Here's an example
+
+```bash
+dig @127.0.0.1 localhost
+```
+
+If DENIS is working correctly, it should grab the record from your records.toml, or fallback to your upstream dns server.
+
+If it doesn't, dig should hang and ultimately error.
+
 ## Configuring
 The config directory contains two files
 
