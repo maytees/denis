@@ -1,5 +1,11 @@
 [[records]]
-name = 'my.example'
+name = 'localhost' # Domain
+type = 'A' # Record type (only A available)
+value = '127.0.0.1' # Address
+ttl = 300 # Cache time
+
+[[records]]
+name = 'my.google'
 type = 'A'
-value = '127.0.0.1'
-ttl = 300
+value = '142.251.16.138'
+ttl = 0

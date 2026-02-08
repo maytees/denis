@@ -1,4 +1,4 @@
 [dns]
-enabled = true
-port = 53
-upstream = '8.8.8.8'
+enabled = true # Toggle DNS
+port = 53 # Default port for DNS
+upstream = '8.8.8.8' # Where to route upstream DNS requesets. Google, Cloudflare, your router (common), etc.

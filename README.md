@@ -1,54 +1,147 @@
-# Denis DNS server
+# DENIS
 > [!NOTE]
 > Code in this repo is not AI generated, everything is hand written. If any parts were *aided* (not written) by AI, the file/block will mention.
 
 > [!NOTE]
 > MacOS uses .local domains, so adding a domain with .local won't work. (not sure about Windows & Linux)
 
-This is a custom DNS ([RFC 1035](https://datatracker.ietf.org/doc/html/rfc1035)) server written by me. At its **current** state, Denis is not being used as a replacement for my local DNS Server, but hopefully will be in the future. This project was just made out of interest of learning Go.
+## What is it?
 
-## Testing
-Simply use the `dig` command as you would with any other DNS. *At it's current state, nothing happens*
+DENIS right now is a working DNS server ([RFC 1035](https://datatracker.ietf.org/doc/html/rfc1035)) meant to run on your local computer or local network. DENIS is just a hobby project for [me](https://maytees.net) to work on to learn golang.
+
+## Vision
+
+The idea for DENIS came from wanting to route differnet local web servers to their own domains. For example, my [Memos](https://usememos.com/) notes server runs on `localhost:5230`, instead of going to that, I wanted to just go to `http://notes`. But there's two things to mention here:
+
+1. Why not just use your local hosts file? (your computers DNS)
+ 
+	- Why not build my own?
+
+2. A DNS alone cant do this, beacuse all a DNS does is route you to an IP.
+ 
+	- Thats what the second part of DENIS is for 👇👇
+
+### More than a DNS
+
+To make the *vision* work, I need to have a reverse proxy running on port 80 (http) wherever I have web apps, so the dns would route a domain to said IP, and then the reverse proxy goes to whatever port the web app is on. I could just use nginx or any other reverse proxy, but I'm choosing to abide by the *build my own* stance and make a custom http server to handle requests.
+
+Moreover, to easily create, remove, and edit records and proxy routes, there will be a NextJS app running to do said actions, connected to an api service running in the DENIS binary
+
+That being said, just note that this is the **vision**, at it's current state, DENIS is just a DNS server that works, but doesn't fully implement the [RFC 1035](https://datatracker.ietf.org/doc/html/rfc1035) protocl fully *(yet)*
+
+## Try it out
+
+Here are the steps to getting DENIS up and running locally:
+
+## Prerequisites 
+
+Before you get started, you *should* install the following:
+
+- [go] (https://go.dev)
+- [air](https://github.com/air-verse/air) - hot reloading (*optional for dev*)
+- [just](https://github.com/casey/just) - task runner (*optional*)
+
+1. Fork the repo
 
 ```bash
-dig @127.0.0.1 -p 5354 google.com
+git clone https://github.com/maytees/denis
+cd denis
 ```
 
-## Configuration
-The config for DENIS is simple - as of right now, there are just 3 settings (default in parentheses):
+2. Create config files
 
-1. Enabled (true) - Toggles the DNS server (might come in handy 🤷‍♂️)
-2. Port (53) - Use 53 for live, 5353 for development (5354 on Mac)
-3. Upstream (8.8.8.8) - Public DNS server (where to route when Denis doesn't have a local record), 8.8.8.8 is [Google Public DNS](https://en.wikipedia.org/wiki/Google_Public_DNS), alternatively use [1.1.1.1 for Cloudflare](https://en.wikipedia.org/wiki/1.1.1.1), or [others](https://gist.github.com/mutin-sa/5dcbd35ee436eb629db7872581093bc5).
-  - If no port is given, DENIS will default to port `53`, so specify the port if necessary. Example: `port = 8.8.8.8:53`
+> [!NOTE]
+> A proper CLI including args for the config folder is in the works. Detecting if a folder is in the the working dir is terrible design. If there isn't a config folder in your current dir, one will be created in your config dir depending on your OS ([where's that?](https://github.com/kirsle/configdir?tab=readme-ov-file#configdir-for-go)).
 
-## Action Plan
+If you're running denis from the repo folder (if it detects a config folder in the current repo) just run:
 
-### Phase 0: Set up project
-Self explanatory.
+```bash
+# with just
+just config-example
 
-### Phase 1: Listen and receive
-Listen on UDP port 5354 (or 53) and prints out the raw bytes from incoming packets. Test with `dig`
+# without
+cp ./config/config.example.toml ./config/config.toml
+cp ./config/records.example.toml ./config/records.toml
+```
 
+3. Run it
 
-### Phase 2: Parse the header
-DNS header is the first 12 bytes of every packet. Parse the content, see [Header Section Format](https://datatracker.ietf.org/doc/html/rfc1035#section-4.1.15). Just print for now.
+```bash
+# with just
+just start
 
+# without
+go build -o dist/denist && sudo dist/denis
+```
 
-### Phase 3: Parse the question 
-After the header comes the question section. Parse out the QNAME (has length prefix), QTYPE (record type), and QCLASS (just `in` (one) for now). All done with bytes
+Or if you wish to run a dev server with air
 
+```bash
+# with just
+just dev
 
-### Phase 4: Build a response
-For now, hardcode a response for one domain. Take the transaction ID from the query, set the response flags, include the question, add an answer section with your IP. Send it back. Test with dig and see if you get your IP.
+# without
+sudo air
+```
 
+## Configuring
+The config directory contains two files
 
-### Phase 5: Add a lookup table
-Replace the hardcoded response with a map (either db (sqlite) or json). Look up the queried domain, return the IP if you have it.
+### config.toml
+This contains general settings and settings specific to the DNS.
 
+Here's an example
 
-### Phase 6: Forwarding
-If you don't have the domain, forward the query to 8.8.8.8:53 (google) or 1.1.1.1 (cloudflare), get the response, send it back.
+```toml
+[dns]
+enabled = true # Toggle DNS
+port = 53 # Default port for DNS
+upstream = '8.8.8.8' # Where to route upstream DNS requesets. Google, Cloudflare, your router (common), etc.
+```
+ 
+### records.toml
+Stores all your DNS records
 
-### Phase 7: Caching (1/2 - doesn't cache forward queries)
-Store responses from upstream to make queries faster. Respect the TTL value from the response. Caching won't be necessary for local because it's already very fast. Only do it if you use a DB.
+Here's an example
+
+```toml
+[[records]]
+name = 'localhost' # Domain
+type = 'A' # Record type (only A available)
+value = '127.0.0.1' # Address
+ttl = 300 # Cache time
+
+[[records]]
+name = 'my.google'
+type = 'A'
+value = '142.251.16.138'
+ttl = 0
+```
+
+## How to route requests to DENIS automatically
+This depends on your operating system. The idea is to route everything through DENIS, instead of your router's assigned dns.
+
+If your OS isn't listed below, I reccomend you search up instructions for it.
+
+### MacOS
+Telling MacOS where to handle DNS requests is very simple. You need to go to your **System Settings** -> **Wifi** -> Click **Details** on the wifi you're connected to -> **DNS** -> Click **+** under DNS Servers, enter in where your server is running.
+
+**Note: your DNS must be running on port 53**
+
+### Browser not using DENIS properly?
+
+If your browser seems to be ignoring DENIS even though you told your OS to use it, it's probably because your browser is using DoH (DNS over https).
+
+For Chrome based browsers, go to your security settings and tell Chrome to use your OS' default.
+
+For Firefox, go to the firefox Network Settings, and set DoH to off.
+
+Alternatively, you could set exceptions for domains you want your browser to use DENIS for.
+
+## Contributing
+
+Anyone is free to contribute to DENIS. Only rule would be to not vibe code anything, or get AI to write any line of code by itself. If you want to contribute, please handwrite and don't give me slop. Your own handwritten slop is acceptable for review though.
+
+## License
+
+DENIS is under the MIT license, you are free to do whatever you want with the code.
