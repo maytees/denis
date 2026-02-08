@@ -3,7 +3,7 @@
 > Code in this repo is not AI generated, everything is hand written. If any parts were *aided* (not written) by AI, the file/block will mention.
 
 > [!NOTE]
-> MacOS uses .local domains, so adding a domain with .local won't work. (not sure about Windows & Linux)
+> Apple uses .local domains for their multicast dns, so adding a domain with .local won't work on MacOS; they use port `5353` for this.
 
 ## What is it?
 
