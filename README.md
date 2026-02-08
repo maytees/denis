@@ -7,7 +7,7 @@
 
 ## What is it?
 
-DENIS right now is a working DNS server ([RFC 1035](https://datatracker.ietf.org/doc/html/rfc1035)) meant to run on your local computer or local network. DENIS is just a hobby project for [me](https://maytees.net) to work on to learn golang.
+DENIS right now is a working DNS server ([RFC 1035](https://datatracker.ietf.org/doc/html/rfc1035)) meant to run on your local computer or local network. DENIS is just a hobby project for [me](https://maytees.net) learn golang.
 
 
 
@@ -33,7 +33,7 @@ To make the *vision* work, I need to have a reverse proxy running on port 80 (ht
 
 Moreover, to easily create, remove, and edit records and proxy routes, there will be a NextJS app running to do said actions, connected to an api service running in the DENIS binary
 
-That being said, just note that this is the **vision**, at it's current state, DENIS is just a DNS server that works, but doesn't fully implement the [RFC 1035](https://datatracker.ietf.org/doc/html/rfc1035) protocl fully *(yet)*
+That being said, just note that this is the **vision**, at it's current state, DENIS is just a DNS server that works, but doesn't fully implement the [RFC 1035](https://datatracker.ietf.org/doc/html/rfc1035) protocol fully *(yet)*
 
 ## Try it out
 
@@ -43,7 +43,7 @@ Here are the steps to getting DENIS up and running locally:
 
 Before you get started, you *should* install the following:
 
-- [go] (https://go.dev)
+- [go](https://go.dev)
 - [air](https://github.com/air-verse/air) - hot reloading (*optional for dev*)
 - [just](https://github.com/casey/just) - task runner (*optional*)
 
@@ -91,6 +91,7 @@ sudo air
 ```
 
 4. Test using dig
+
 Dig is a command line tool used to query DNS servers for records. If you haven't set DENIS as your default DNS, you need to pass the @addr (+ :port if you aren't running on :53) to tell dig to query DENIS.
 
 Here's an example
@@ -151,9 +152,9 @@ Telling MacOS where to handle DNS requests is very simple. You need to go to you
 
 If your browser seems to be ignoring DENIS even though you told your OS to use it, it's probably because your browser is using DoH (DNS over https).
 
-For Chrome based browsers, go to your security settings and tell Chrome to use your OS' default.
+For **Chrome based** browsers, go to your security settings and tell Chrome to use your OS' default dns.
 
-For Firefox, go to the firefox Network Settings, and set DoH to off.
+For **Firefox**, go to the firefox Network Settings, and set DoH to off.
 
 Alternatively, you could set exceptions for domains you want your browser to use DENIS for.
 
