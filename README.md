@@ -9,6 +9,12 @@
 
 DENIS right now is a working DNS server ([RFC 1035](https://datatracker.ietf.org/doc/html/rfc1035)) meant to run on your local computer or local network. DENIS is just a hobby project for [me](https://maytees.net) to work on to learn golang.
 
+
+
+https://github.com/user-attachments/assets/7efd7c2a-f245-4340-871b-511c58555be9
+
+
+
 ## Vision
 
 The idea for DENIS came from wanting to route differnet local web servers to their own domains. For example, my [Memos](https://usememos.com/) notes server runs on `localhost:5230`, instead of going to that, I wanted to just go to `http://notes`. But there's two things to mention here:
