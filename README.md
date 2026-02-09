@@ -5,6 +5,7 @@
 > [!NOTE]
 > Apple uses .local domains for their multicast dns, so adding a domain with .local won't work on MacOS; they use port `5353` for this.
 
+
 ## What is it?
 
 DENIS right now is a working DNS server ([RFC 1035](https://datatracker.ietf.org/doc/html/rfc1035)) meant to run on your local computer or local network. DENIS is just a hobby project for [me](https://maytees.net) learn golang.
