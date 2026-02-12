@@ -2,6 +2,7 @@ package dns
 
 import (
 	"encoding/binary"
+	"errors"
 	"fmt"
 )
 
@@ -24,17 +25,28 @@ func parseQuestions(message []byte, offset *int, qdCount uint16) ([]Question, er
 	questions := make([]Question, 0, qdCount)
 
 	for range qdCount {
-		name := parseName(message, offset)
+		name, err := parseName(message, offset)
+		if err != nil {
+			return nil, err
+		}
 		fmt.Println("Resolved domain:", name.Domain)
 
-		qType := binary.BigEndian.Uint16(message[*offset : *offset+2])
-		*offset += 2
+		qTypeJump := *offset + 2
+		if qTypeJump > len(message) {
+			return nil, errors.New("Message cuts off before QType")
+		}
+		qType := binary.BigEndian.Uint16(message[*offset:qTypeJump])
+		*offset = qTypeJump
 
-		qClass := binary.BigEndian.Uint16(message[*offset : *offset+2])
-		*offset += 2
+		qClassJump := *offset + 2
+		if qClassJump > len(message) {
+			return nil, errors.New("Message cuts off before QClass")
+		}
+		qClass := binary.BigEndian.Uint16(message[*offset:qClassJump])
+		*offset = qClassJump
 
 		questions = append(questions, Question{
-			QName:  name,
+			QName:  *name,
 			QType:  RecordType(qType),
 			QClass: ClassValue(qClass),
 		})

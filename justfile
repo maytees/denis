@@ -17,6 +17,16 @@ build:
 start: build
 	sudo dist/denis
 
+# Run all tests
+[group('dev')]
+test:
+	go test ./...
+
+# Use gotestsum to test
+[group('dev')]
+prettytest:
+	gotestsum --format testdox
+
 # Clean build files
 [group('dev')]
 clean:

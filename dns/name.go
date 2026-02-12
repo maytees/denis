@@ -1,6 +1,7 @@
 package dns
 
 import (
+	"errors"
 	"fmt"
 	"strings"
 )
@@ -14,7 +15,7 @@ func (n Name) String() string {
 	return fmt.Sprintf("%s", n.Domain)
 }
 
-func parseName(message []byte, offset *int) Name {
+func parseName(message []byte, offset *int) (*Name, error) {
 	start := *offset
 	var builder strings.Builder
 
@@ -30,12 +31,20 @@ func parseName(message []byte, offset *int) Name {
 			builder.WriteByte('.')
 		}
 
-		builder.WriteString(string(message[*offset:(*offset + length)]))
+		jump := *offset + length
+		if jump > len(message) {
+			return nil, errors.New("Message too short")
+		}
+
+		_, err := builder.WriteString(strings.ToLower(string(message[*offset:jump])))
+		if err != nil {
+			return nil, err
+		}
 		*offset += length
 	}
 
-	return Name{
+	return &Name{
 		Raw:    message[start:*offset],
 		Domain: builder.String(),
-	}
+	}, nil
 }

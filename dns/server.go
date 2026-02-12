@@ -44,7 +44,7 @@ func StartDNS(dnsConfig *config.DNSConfig, records *[]config.Record) error {
 				clientAddr,
 			)
 			if err != nil {
-				fmt.Printf("Failed to parse message:", err)
+				fmt.Println("Failed to parse message:", err)
 			}
 
 			fmt.Printf("Got message: %v", message)
@@ -69,7 +69,7 @@ func parseMessage(message []byte, records *[]config.Record, dnsConfig config.DNS
 	offset := 12
 	header := parseHeader(message[:offset])
 
-	questions, err := parseQuestions(message, &offset, header.QDCount)
+	_, err := parseQuestions(message, &offset, header.QDCount)
 	if err != nil {
 		return nil, err
 	}
