@@ -47,6 +47,7 @@ Before you get started, you *should* install the following:
 - [go](https://go.dev)
 - [air](https://github.com/air-verse/air) - hot reloading (*optional for dev*)
 - [just](https://github.com/casey/just) - task runner (*optional*)
+- [gotestsum](https://github.com/gotestyourself/gotestsum) - pretty testing (*optional*)
 
 1. Fork the repo
 
@@ -91,7 +92,7 @@ just dev
 sudo air
 ```
 
-4. Test using dig
+4. Send query
 
 Dig is a command line tool used to query DNS servers for records. If you haven't set DENIS as your default DNS, you need to pass the @addr (+ :port if you aren't running on :53) to tell dig to query DENIS.
 
@@ -104,6 +105,20 @@ dig @127.0.0.1 localhost
 If DENIS is working correctly, it should grab the record from your records.toml, or fallback to your upstream dns server.
 
 If it doesn't, dig should hang and ultimately error.
+
+## Testing
+Tests are WIP for DENIS, run them with the following
+
+```bash
+# just & with gotestsum
+just prettytest
+
+# or without gotestsum
+just test
+
+# without just
+go test ./...
+```
 
 ## Configuring
 The config directory contains two files
