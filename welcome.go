@@ -179,7 +179,7 @@ func (b *ServiceBuilder) AddDNS(enabled bool, port int, err error) *ServiceBuild
 	b.services = append(b.services, ServiceStatus{
 		Name:    "dns",
 		Enabled: enabled,
-		Address: fmt.Sprintf("0.0.0.1:%d", port),
+		Address: fmt.Sprintf("127.0.0.1:%d", port),
 		Error:   err,
 	})
 
