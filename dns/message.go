@@ -3,7 +3,8 @@ package dns
 import "fmt"
 
 type Message struct {
-	Header     Header
+	Header Header
+	// Don't do multiple questions for now.
 	Question   Question
 	Answer     []ResourceRecord
 	Authority  []ResourceRecord
