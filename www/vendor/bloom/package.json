@@ -1,0 +1,9 @@
+{
+  "name": "bloom",
+  "version": "0.0.1",
+  "type": "module",
+	"exports": {
+		".": "./src/index.ts",
+		"./utils": "./src/utils/index.ts"
+	}
+}

@@ -7,3 +7,7 @@ tmp
 
 dist/
 denis
+
+# docs site (www/)
+www/node_modules/
+www/output.css

@@ -48,4 +48,25 @@ lint:
 format:
 	golangci-lint fmt
 
+# Run the docs site tailwind watcher
+[group('site')]
+site-css:
+	cd www && bun run css
+
+# Run the docs site dev server
+[group('site')]
+site-dev:
+	cd www && bun run dev
+
+# Build the docs site to www/dist
+[group('site')]
+site-build:
+	cd www && bun install && bun run build
+
+# Update the vendored bloom runtime from a sibling ../bloom checkout
+[group('site')]
+site-vendor:
+	rsync -a --delete --exclude='*.test.ts' --exclude='tsconfig.json' --exclude='README.md' ../bloom/packages/runtime/ www/vendor/bloom/
+	cd www && bun install
+
 # TODO: Add tests

@@ -1,0 +1,21 @@
+{
+	"name": "denis-www",
+	"private": true,
+	"type": "module",
+	"scripts": {
+		"dev": "bun index.html docs/index.html docs/getting-started/index.html docs/configuration/index.html docs/records/index.html docs/testing/index.html",
+		"css": "bunx @tailwindcss/cli -i styles.css -o output.css --watch",
+		"build": "bunx @tailwindcss/cli -i styles.css -o output.css --minify && bun build ./index.html ./docs/index.html ./docs/getting-started/index.html ./docs/configuration/index.html ./docs/records/index.html ./docs/testing/index.html --outdir=dist --minify --css-chunking"
+	},
+	"dependencies": {
+		"bloom": "file:./vendor/bloom"
+	},
+	"devDependencies": {
+		"@tailwindcss/cli": "^4.3.3",
+		"@types/bun": "latest",
+		"tailwindcss": "^4.3.3"
+	},
+	"peerDependencies": {
+		"typescript": "^5.9.3"
+	}
+}
