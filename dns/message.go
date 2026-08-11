@@ -1,6 +1,7 @@
 package dns
 
 import (
+	"errors"
 	"fmt"
 )
 
@@ -31,6 +32,14 @@ func parseMessage(message []byte) (*Message, int, error) {
 	questions, err := parseQuestions(message, &offset, header.QDCount)
 	if err != nil {
 		return nil, 0, err
+	}
+
+	if len(questions) == 0 || header.QDCount == 0 {
+		return nil, 0, errors.New("query contains no questions")
+	}
+
+	if header.FLAGS.QR {
+		return nil, 0, errors.New("message is a response, not a query")
 	}
 
 	return &Message{

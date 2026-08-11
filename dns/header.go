@@ -8,14 +8,14 @@ import (
 )
 
 type Flags struct {
-	QR     bool
-	OPCODE uint8
-	AA     bool
-	TC     bool
-	RD     bool
-	RA     bool
-	Z      uint8 // Should always be 0
-	RCODE  uint8
+	QR     bool  // query (false) or response (true)
+	OPCODE uint8 // kind of query: 0 standard, 1 inverse, 2 server status
+	AA     bool  // authoritative answer: responder owns the record (not cached/relayed)
+	TC     bool  // truncated: message was cut off by the 512-byte UDP limit
+	RD     bool  // recursion desired: client asks server to chase the answer for it
+	RA     bool  // recursion available: server telling client it can recurse
+	Z      uint8 // not used in rfc 1035, should always be 0
+	RCODE  uint8 // response code: 0 ok, 1 format error, 2 server fail, 3 no such domain (NXDOMAIN)
 }
 
 func (f Flags) String() string {
