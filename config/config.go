@@ -109,8 +109,8 @@ func LoadDNSConfig() (DenisConfig, string) {
 // TODO: Slow linear search, optimize later
 func FindRecordByName(records []Record, target string) (Record, bool) {
 	for _, record := range records {
-		// Records are always stored lowercase
-		if record.Name == strings.ToLower(target) {
+		// records aren't case sensitive
+		if strings.EqualFold(record.Name, target) {
 			return record, true
 		}
 	}
