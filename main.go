@@ -20,7 +20,7 @@ func main() {
 	if dnsConfig.Enabled {
 		dnsErr = dns.StartDNS(dnsConfig, &records)
 	}
-	builder.AddDNS(dnsConfig.Enabled, dnsConfig.Port, dnsErr)
+	builder.AddDNS(dnsConfig.Enabled, dnsConfig.Port, dnsErr, denisConfig.DNS.Host)
 
 	cliWelcome(CLIConfig{
 		ConfigPath:  confpath,
