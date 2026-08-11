@@ -48,6 +48,42 @@ lint:
 format:
 	golangci-lint fmt
 
+# Build the image and (re)start the container
+[group('docker')]
+docker-compose:
+	docker compose up -d --build
+
+# Follow container logs
+[group('docker')]
+docker-logs:
+	docker compose logs -f
+
+# Restart the container (e.g. after editing records.toml)
+[group('docker')]
+docker-restart:
+	docker compose restart
+
+# Stop and remove the container
+[group('docker')]
+docker-down:
+	docker compose down
+
+# Verify DENIS answers: local records + upstream forwarding
+[group('docker')]
+docker-check:
+	dig @127.0.0.1 localhost
+	dig @127.0.0.1 google.com
+
+# Point macOS DNS at DENIS
+[group('dns')]
+dns-use:
+	sudo networksetup -setdnsservers "Wi-Fi" 127.0.0.1
+
+# Revert macOS DNS to DHCP (escape hatch if DENIS is down)
+[group('dns')]
+dns-revert:
+	sudo networksetup -setdnsservers "Wi-Fi" "Empty"
+
 # Run the docs site tailwind watcher
 [group('site')]
 site-css:

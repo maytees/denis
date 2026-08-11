@@ -79,7 +79,13 @@ const prevLink = el("a", {
 	class: "underline text-emerald-700",
 });
 insert(prevLink, "← Records");
+const nextLink = el("a", {
+	href: "/docs/docker",
+	class: "underline text-emerald-700",
+});
+insert(nextLink, "Docker →");
 insert(pager, prevLink);
+insert(pager, nextLink);
 
 const footer = el("footer", {
 	class: "border-t border-neutral-200 mt-14 pt-4 text-xs text-neutral-500",

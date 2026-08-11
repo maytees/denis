@@ -10,6 +10,12 @@
 
 DENIS right now is a working DNS server ([RFC 1035](https://datatracker.ietf.org/doc/html/rfc1035)) meant to run on your local computer or local network. DENIS is just a hobby project for [me](https://maytees.net) learn golang.
 
+<!-- The Documentation section below and the docs site (www/) were written by AI (Claude) -->
+
+## Documentation
+
+This README covers the basics. For the full walkthrough (configuration, records, testing, Docker), see the docs site: **[denis.matees.net/docs](https://denis.matees.net/docs)** — built with [Bloom](https://github.com/maytees/bloom), lives in [`www/`](./www).
+
 
 
 https://github.com/user-attachments/assets/7efd7c2a-f245-4340-871b-511c58555be9
@@ -106,6 +112,30 @@ If DENIS is working correctly, it should grab the record from your records.toml,
 
 If it doesn't, dig should hang and ultimately error.
 
+<!-- This section was written by AI (Claude) -->
+
+## Run with Docker
+
+Don't want to install Go? DENIS runs in a container — you only need [Docker](https://docs.docker.com/get-docker/).
+
+```bash
+# 1. create config files (see step 2 above)
+just config-example
+
+# 2. in config/config.toml, set:
+#    host = '0.0.0.0'   (required in Docker, still loopback-only on your machine)
+
+# 3. build & run
+just docker-compose   # or: docker compose up -d --build
+
+# 4. test it
+just docker-check     # or: dig @127.0.0.1 localhost && dig @127.0.0.1 google.com
+```
+
+Edit `records.toml` anytime, then `just docker-restart` to apply. After changing code or pulling, rerun `just docker-compose`.
+
+For the full guide (updating, using DENIS as your system DNS, the escape hatch when it's down), see **[denis.matees.net/docs/docker](https://denis.matees.net/docs/docker)**.
+
 ## Testing
 Tests are WIP for DENIS, run them with the following
 
@@ -133,6 +163,7 @@ Here's an example
 enabled = true # Toggle DNS
 port = 53 # Default port for DNS
 upstream = '8.8.8.8' # Where to route upstream DNS requesets. Google, Cloudflare, your router (common), etc.
+host = '127.0.0.1' # Address to bind to. Use 0.0.0.0 when running in Docker
 ```
  
 ### records.toml

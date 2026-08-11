@@ -40,6 +40,7 @@ const docsLinks: [string, string, string][] = [
 	["Configuration", "/docs/configuration", "config.toml and where it lives"],
 	["Records", "/docs/records", "records.toml and A records"],
 	["Testing", "/docs/testing", "querying with dig, running the Go tests"],
+	["Docker", "/docs/docker", "run DENIS in a container, use it as your system DNS"],
 ];
 
 for (const [label, href, description] of docsLinks) {

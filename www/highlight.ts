@@ -14,6 +14,8 @@ const KEYWORDS = new Set([
 	"cd",
 	"bun",
 	"gotestsum",
+	"docker",
+	"networksetup",
 	// toml booleans
 	"true",
 	"false",

@@ -3,9 +3,9 @@
 	"private": true,
 	"type": "module",
 	"scripts": {
-		"dev": "bun index.html docs/index.html docs/getting-started/index.html docs/configuration/index.html docs/records/index.html docs/testing/index.html",
+		"dev": "bun index.html docs/index.html docs/getting-started/index.html docs/configuration/index.html docs/records/index.html docs/testing/index.html docs/docker/index.html",
 		"css": "bunx @tailwindcss/cli -i styles.css -o output.css --watch",
-		"build": "bunx @tailwindcss/cli -i styles.css -o output.css --minify && bun build ./index.html ./docs/index.html ./docs/getting-started/index.html ./docs/configuration/index.html ./docs/records/index.html ./docs/testing/index.html --outdir=dist --minify --css-chunking"
+		"build": "bunx @tailwindcss/cli -i styles.css -o output.css --minify && bun build ./index.html ./docs/index.html ./docs/getting-started/index.html ./docs/configuration/index.html ./docs/records/index.html ./docs/testing/index.html ./docs/docker/index.html --outdir=dist --minify --css-chunking"
 	},
 	"dependencies": {
 		"bloom": "file:./vendor/bloom"
