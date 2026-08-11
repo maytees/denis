@@ -1,0 +1,9 @@
+services:
+  denis:
+    build: .
+    container_name: denis
+    ports:
+      - "127.0.0.1:53:53/udp"
+    volumes:
+      - ./config:/app/config
+    restart: unless-stopped

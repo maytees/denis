@@ -2,3 +2,4 @@
 enabled = true # Toggle DNS
 port = 53 # Default port for DNS
 upstream = '8.8.8.8' # Where to route upstream DNS requesets. Google, Cloudflare, your router (common), etc.
+host = '127.0.0.1' # Address to bind to. Use 0.0.0.0 when running in Docker
