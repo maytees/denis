@@ -10,7 +10,7 @@ import (
 )
 
 func StartDNS(dnsConfig *config.DNSConfig, records *[]config.Record) error {
-	socketAddr := "127.0.0.1:" + strconv.Itoa(dnsConfig.Port)
+	socketAddr := dnsConfig.Host + ":" + strconv.Itoa(dnsConfig.Port)
 	udpAddress, err := net.ResolveUDPAddr("udp", socketAddr)
 	if err != nil {
 		return err

@@ -27,6 +27,7 @@ type DNSConfig struct {
 	Enabled  bool   `toml:"enabled"`
 	Port     int    `toml:"port"`
 	Upstream string `toml:"upstream"` // fallback
+	Host     string `toml:"host"`
 }
 
 // Holds dns, proxy, api & web server
@@ -86,6 +87,8 @@ func LoadDNSConfig() (DenisConfig, string) {
 				Enabled:  true,
 				Port:     53,
 				Upstream: "8.8.8.8:53",
+				// Default for local dev, but docker should have 0.0.0.0
+				Host: "127.0.0.1",
 			},
 		}
 
